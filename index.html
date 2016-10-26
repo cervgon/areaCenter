@@ -5,48 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="shortcut" href="favicon.png">
      <!-- non-retina iPhone pre iOS 7 -->
-    <link rel="apple-touch-icon" href="icon57.png" sizes="57x57">
+    <link rel="apple-touch-icon" href="apple-touch-icon-57x57.png" sizes="57x57">
     <!-- non-retina iPad pre iOS 7 -->
-    <link rel="apple-touch-icon" href="icon72.png" sizes="72x72">
+    <link rel="apple-touch-icon" href="apple-touch-icon-72x72.png" sizes="72x72">
     <!-- non-retina iPad iOS 7 -->
-    <link rel="apple-touch-icon" href="icon76.png" sizes="76x76">
+    <link rel="apple-touch-icon" href="apple-touch-icon-76x76.png" sizes="76x76">
     <!-- retina iPhone pre iOS 7 -->
-    <link rel="apple-touch-icon" href="icon114.png" sizes="114x114">
+    <link rel="apple-touch-icon" href="apple-touch-icon-114x114.png" sizes="114x114">
     <!-- retina iPhone iOS 7 -->
-    <link rel="apple-touch-icon" href="icon120.png" sizes="120x120">
+    <link rel="apple-touch-icon" href="apple-touch-icon-120x120.png" sizes="120x120">
     <!-- retina iPad pre iOS 7 -->
-    <link rel="apple-touch-icon" href="icon144.png" sizes="144x144">
+    <link rel="apple-touch-icon" href="apple-touch-icon-144x144.png" sizes="144x144">
     <!-- retina iPad iOS 7 -->
-    <link rel="apple-touch-icon" href="icon152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="apple-touch-icon-152x152.png" sizes="152x152">
     <link rel="mask-icon" href="icon.svg" color="#333">
     <meta name="apple-mobile-web-app-status-bar-style" content="red">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <script src="js/jquery.min.js"></script>
     <script src="js/panel.js"></script>
-    <style>
-      body{font-family:arial, helvetica, sans-serif;}
-      #container{ margin: 0 auto 0}
-      #analysisImage{border: 1px solid #eee; position: relative;}
-      #output{}
-      #analysisImage img{}
-      #xg{position:absolute; top: 0; left: 0; width: 0; height: 100%; z-index: 10; border-right:1px solid #f00;}
-      #xg div{position: relative; width: 100%; height: 100%;}
-      #xg div span{position: absolute; bottom: 0; right: 0; font-size: 10px; color: #999; padding: 3px}
-      #yg{position:absolute; top: 0; left: 0; width: 100%; height: 0; z-index: 11; border-bottom:1px solid #f00;}
-      #yg div{position: relative; width: 100%; height: 100%;}
-      #yg div span{position: absolute; bottom: 0; right: 0; font-size: 10px; color: #999; padding: 3px}
-      #left{position:absolute; top: 0; left: 0; width: 0; height: 100%; z-index: 1; border-right:1px solid #fcc;}
-      #right{position:absolute; top: 0; left: 0; width: 0; height: 100%; z-index: 2; border-right:1px solid #fcc;}
-      #top{position:absolute; top: 0; left: 0; width: 100%; height: 0; z-index: 3; border-bottom:1px solid #fcc;}
-      #bottom{position:absolute; top: 0; left: 0; width: 100%; height: 0; z-index: 4; border-bottom:1px solid #fcc;}
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/gui.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
   </head>
-  <body>
-    <img id="uploadPreview">
-    <input id="uploadImage" type="file" name="photoimage" class="fimg1" style="display: none" />
-    <label for="uploadImage">Select image to check</label>
-    <pre id="timeRem"></pre>
-    <div id="container">
+  <body class="p05">
+    <div id="header">
+      <div class="container">
+        <img class="icon" src="icon.png">
+        <h1>Area Center</h1>
+        <br class="clear">
+      </div>
+    </div>
+    <div class="container">
       <div id="analysisImage">
         <div id="xg"></div>
         <div id="yg"></div>
@@ -55,19 +43,30 @@
         <div id="top"></div>
         <div id="bottom"></div>
         <img id="previewImg" src="brand.png">
+        <div id="area"></div>
       </div>
-      <pre id="output"></pre>
+      <hr class="transparent">
+      <img id="uploadPreview">
+      <input id="uploadImage" type="file" name="photoimage" class="fimg1" style="display: none" />
+      <label for="uploadImage" class="btn">Select image to check</label>
+      <!--<pre id="timeRem"></pre>-->
+      <hr class="transparent">
+      <div id="filter" class="p0-05">
+        <label class="m block m0">Contrast Precision</label>
+        <input type="range" min="20" max="100" step="5" oninput="showVal(this.value)" onchange="showVal(this.value)">
+        <img class="block" src="contrast.png">
+      </div>
+      <hr class="transparent"> 
+      <!--<span id="valBox"></span>-->
+      <!--<pre id="output"></pre>-->
       <pre id="outputTime"></pre>
+      <br>  
       <!--
       <pre id="Ix"></pre>
       <button id="areaMomentOfInertia">Area moment of inertia</button>
       <pre id="areaMomentOfInertiaPre"></pre>
       <pre id="array"></pre>
       -->
-      <br>  
-      <pre>precision</pre>
-      <input id="filter" type="range" min="5" max="100" step="1" oninput="showVal(this.value)" onchange="showVal(this.value)" style="width: 200px">
-      <span id="valBox"></span>
     </div>
   </body>
 </html>

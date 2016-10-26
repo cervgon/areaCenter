@@ -1,103 +1,6 @@
-/*
-function processImage(){
-    step = 5;
-    img = new Image();
-    img.src = "brand2.png";
-    img.onload = function() {
-        var c = document.createElement('canvas'), d, img = this;
-        if(!this.canvas) {
-            this.canvas = $('<canvas />')[0];
-            this.canvas.width = this.width;
-            this.canvas.height = this.height;
-            this.canvas.getContext('2d').drawImage(this, 0, 0, this.width, this.height);
-        }
-        width = Math.floor(this.canvas.width)-1;
-        height =Math.floor(this.canvas.height)-1;
-
-        var counter = 0;
-        var invValue;
-        var filter = 0;
-        
-        var downPos = 0;
-        var upPos = height;
-        var rightPos = 0;
-        var leftPos = width;
-        var value = 0;
-        var invValue = 0;
-        var valueT = 0;
-        yg = 0;
-        xg = 0;
-
-        var xx = 0;
-        var y = 0;
-        var counterPix = 0;
-        var pix = 0;
-
-        var totalArea = 0;
-        var area = 0;
-
-        var limit = Math.floor((width+1)/step)*Math.floor((height+1)/step);
-
-        var startTime = new Date(), outputDiv = document.getElementById('outputTime');
-
-        for (var x = 0; x <= width; x = x+step) {
-            for (var y = 0; y <= height; y= y+step) {
-                pixelData = this.canvas.getContext('2d').getImageData(x, y, 1, 1).data;
-                invValue = Math.floor((pixelData[0] * 299 + pixelData[1] * 587 + pixelData[2] * 114) / 2550);
-                value = 100 - invValue;
-                counter++;
-
-                if (value > filter && pixelData[3] > 0) {
-                    counterPix++;
-                    yg = yg + (y * value);
-                    xg = xg + (x * value);
-                    valueT = valueT + value;
-
-                    if (downPos <= y) {
-                        downPos = y;
-                    }
-                    if (upPos >= y) {
-                        upPos = y;
-                    }
-                    if (leftPos >= x) {
-                        leftPos = x;
-                    }
-                    if (rightPos <= x) {
-                        rightPos = x;
-                    }
-
-                    totalArea = totalArea + ((pixelData[0]+1)*(pixelData[1]+1)*(pixelData[2]+1)*(pixelData[3]+1));
-                }
-                if(counter >= limit){
-                    ygFinal =  Math.floor(yg / valueT);
-                    if(!ygFinal>0){ygFinal=Math.floor(height/2)};
-                    xgFinal =  Math.floor(xg / valueT);
-                    if(!xgFinal>0){xgFinal=Math.floor(width/2)};
-                    var tempFullArea = ((width+1)/step)*((height+1)/step)*256;
-                    area = Math.floor(totalArea*10000/tempFullArea)/100;
-                    rightPos = rightPos+step;
-                    downPos = downPos + step;
-                    $('#output').html('xg: '+ xgFinal+'    yg: '+ygFinal+'<br><br>downPos: '+ downPos+'    upPos: '+upPos+'    leftPos: '+ leftPos+'    rightPos: '+rightPos+'<br><br>counter: '+ counter+'    counterPix: '+counterPix+'<br><br>Area:'+area+'%');
-                    $('#xg').width(xgFinal);
-                    if(xgFinal>36 && ygFinal>36){
-                        $('#xg').html('<div><span>xg</span></div>');
-                        $('#yg').html('<div><span>yg</span></div>');
-                    }
-                    $('#yg').height(ygFinal);
-                    $('#left').width(leftPos);
-                    $('#right').width(rightPos);
-                    $('#top').height(upPos-1);
-                    $('#bottom').height(downPos);
-                    outputDiv.innerHTML = "ms since the start: " + (new Date() - startTime);
-                }
-            }
-        }
-    }
-}
-*/
 var imgSrc;
-
 var imageData = [];
+var imgSaved;
 
 function uploadImage(){
     imgSrc = null;
@@ -121,6 +24,7 @@ function uploadImage(){
             reader.onloadend = function(){
                 //$("#uploadPreview").attr("src", this.result);
                 imgSrc = this.result;
+                localStorage.setItem("img",imgSrc);
                 generate(imgSrc);
             };
      
@@ -150,7 +54,7 @@ function generate(imgSrc){
     imageData = [];
     img = new Image();
     if(imgSrc == null || imgSrc == undefined){
-        img.src = "brand.png";
+    img.src = "brand.png";
     }
     else{
        img.src =  imgSrc;
@@ -166,7 +70,14 @@ function generate(imgSrc){
         width = Math.floor(this.canvas.width)-1;
         height =Math.floor(this.canvas.height)-1;
 
-        var filter = 5;
+        var filter;
+        var filterSaved = localStorage.getItem("filter");
+        if(!filterSaved){
+            filter = 5;
+        }
+        else{
+            filter = 105 - filterSaved;
+        }
         step = 1;
         var a = width*height;
         if(a>66000){
@@ -246,18 +157,18 @@ function generate(imgSrc){
                 }
                 if(counter >= limit){
                     ygFinal =  Math.floor(yg / valueT);
-                    if(!ygFinal>0){ygFinal=Math.floor(height/2)};
+                    if(!ygFinal){ygFinal=Math.floor(height/2);}
                     xgFinal =  Math.floor(xg / valueT);
-                    if(!xgFinal>0){xgFinal=Math.floor(width/2)};
+                    if(!xgFinal){xgFinal=Math.floor(width/2);}
                     var tempFullArea = ((width+1)/step)*((height+1)/step);
                     area = Math.floor(totalArea*10000/tempFullArea)/100;
                     rightPos = rightPos+step;
                     if((rightPos+(2*step))>=width){
-                        rightPos=width
+                        rightPos=width;
                     }
                     downPos = downPos + step;
                     if((downPos+(2*step))>=height){
-                        downPos=height
+                        downPos=height;
                     }
                     $('#output').html('xg: '+ xgFinal+'   yg: '+ygFinal+'<br><br>downPos: '+ downPos+'   upPos: '+upPos+'<br><br>leftPos: '+ leftPos+'   rightPos: '+rightPos+'<br><br>counter: '+ counter+'   counterPix: '+counterPix+'<br><br>Area:'+area+'%');
         
@@ -266,10 +177,9 @@ function generate(imgSrc){
                     $('#previewImg').attr("src",imgSrc);
 
                     var scale = 1.0;
-                    var winW = $(window).width();
+                    var winW = $('.container').width();
                     if(width > winW){
-                        scale = 0.95*winW/width;
-                        console.log('scale: '+scale);
+                        scale = winW/width;
                         $('#previewImg').width(width*scale);
                     }
                     $('#xg').width(xgFinal*scale);
@@ -286,10 +196,14 @@ function generate(imgSrc){
                     var tempBottom = downPos*scale-1;
                     if(tempBottom<0){tempBottom =0};
                     $('#bottom').height(tempBottom);
+                    $('#area').height((downPos*scale)-(upPos*scale));
+                    $('#area').width((rightPos*scale)-(leftPos*scale));
+                    $('#area').css('top',upPos*scale);
+                    $('#area').css('left',leftPos*scale);
                     outputDiv.innerHTML = "ms since the start: " + (new Date() - startTime);
 
                     done = true;
-                    console.log('done');
+                    //console.log('done');
 
                     return false;
                 }
@@ -300,7 +214,7 @@ function generate(imgSrc){
                 if(counter>2000 && multiple(counter, 2000) ){
                     var etas = getEta(counter,startTime,a,step);
                     var tr = etas[1];
-                    console.log('Time remaining '+ tr + 'ms');
+                    //console.log('Time remaining '+ tr + 'ms');
 
                 }
             }
@@ -315,10 +229,18 @@ function areaMomentOfInertia (){
 }
 
 function showVal(newVal){
-  document.getElementById("valBox").innerHTML=newVal;
+    //document.getElementById("valBox").innerHTML=newVal;
+    localStorage.setItem("filter",newVal);
+    imgSaved = localStorage.getItem("img");
+    if (imgSaved) {generate(imgSaved);}
+    else{generate();}
 }
 
 $(document).ready(function(){
+    imgSaved = localStorage.getItem("img");
+    if(imgSaved){
+        $("#previewImg").attr("src",imgSaved);
+    }
     var step;
     var pixelData;
     var width = 0;
@@ -328,10 +250,13 @@ $(document).ready(function(){
     var xgFinal = 0;
     var ygFinal = 0;
 
-    generate();
-    uploadImage(); 
-    //$('#areaMomentOfInertia').click(areaMomentOfInertia);
-
+    uploadImage();
+    var initFilter = localStorage.getItem("filter");
+    if(!initFilter){
+        initFilter = 100;
+    }
+    $("#filter").val(initFilter);
+    showVal(initFilter);
 });
 
 /* TODO
