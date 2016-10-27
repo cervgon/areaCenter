@@ -1,6 +1,5 @@
 var imgSrc;
 var imageData = [];
-var imgSaved;
 
 function uploadImage(){
     imgSrc = null;
@@ -24,7 +23,6 @@ function uploadImage(){
             reader.onloadend = function(){
                 //$("#uploadPreview").attr("src", this.result);
                 imgSrc = this.result;
-                localStorage.setItem("img",imgSrc);
                 generate(imgSrc);
             };
      
@@ -228,19 +226,13 @@ function areaMomentOfInertia (){
     $('#areaMomentOfInertiaPre').html('areaMomentOfInertia: '+amoi+xgFinal);
 }
 
+var showValTimeOut;
 function showVal(newVal){
     //document.getElementById("valBox").innerHTML=newVal;
     localStorage.setItem("filter",newVal);
-    imgSaved = localStorage.getItem("img");
-    if (imgSaved) {generate(imgSaved);}
-    else{generate();}
 }
 
 $(document).ready(function(){
-    imgSaved = localStorage.getItem("img");
-    if(imgSaved){
-        $("#previewImg").attr("src",imgSaved);
-    }
     var step;
     var pixelData;
     var width = 0;
@@ -250,12 +242,15 @@ $(document).ready(function(){
     var xgFinal = 0;
     var ygFinal = 0;
 
+    generate();
+
     uploadImage();
     var initFilter = localStorage.getItem("filter");
-    if(!initFilter){
-        initFilter = 100;
+    if(initFilter == null || initFilter == undefined){
+        initFilter = 70;
+        console.log("fuck");
     }
-    $("#filter").val(initFilter);
+    $("#filter input[type=range]").val(initFilter);
     showVal(initFilter);
 });
 
