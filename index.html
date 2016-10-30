@@ -24,6 +24,7 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/panel.js"></script>
     <link rel="stylesheet" type="text/css" href="css/gui.css">
+    <link rel="stylesheet" type="text/css" href="css/fonts/material-icons.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
   </head>
   <body class="p05">
@@ -31,6 +32,10 @@
       <div class="container">
         <img class="icon" src="icon.png">
         <h1>Area Center</h1>
+        <img class="brand-name" src="brand-name.png">
+        <input id="uploadImage" type="file" name="photoimage" class="fimg1" style="display: none" />
+        <label for="uploadImage" class="xs btn btnGreen uppercase va-bottom floatRight"><i class="material-icons va-bottom">&#xE410;</i> Select image
+        </label>
         <br class="clear">
       </div>
     </div>
@@ -47,17 +52,19 @@
       </div>
       <hr class="transparent">
       <img id="uploadPreview">
-      <input id="uploadImage" type="file" name="photoimage" class="fimg1" style="display: none" />
-      <label for="uploadImage" class="btn">Select image to check</label>
-      <button onclick="generate(imgSrc)">Refresh</button>
-      <!--<pre id="timeRem"></pre>-->
-      <hr class="transparent">
-      <div id="filter" class="p0-05">
-        <label class="m block m0">Contrast Precision</label>
-        <input type="range" min="20" max="100" step="5" oninput="showVal(this.value)" onchange="showVal(this.value)">
+      <hr>
+      <div id="filter" class="p0-05 inline-block">
+        <label class="xm block m0">
+          <i class="material-icons va-bottom">&#xE3DB;</i>
+          <span class="va-bottom fw400 "> Filter B and W</span>
+        </label>
+        <input type="range" min="10" max="100" step="5" oninput="showVal(this.value)" onchange="showVal(this.value)">
         <img class="block" src="contrast.png">
       </div>
-      <hr class="transparent"> 
+      <div id="colors" class="p0-05 inline-block">
+        <ul id="colorsList"></ul>
+      </div>
+      <hr class="big">
       <!--<span id="valBox"></span>-->
       <!--<pre id="output"></pre>-->
       <pre id="outputTime"></pre>

@@ -717,7 +717,6 @@ background-color:#f9f9f9; background-image:  url("https://dl.dropboxusercontent.
 .container{width: 100%; margin:0 auto 0;}
 nav+.container{margin-top:3em;}
 @media screen and (min-width:20em) {
-  .container{width: 20em}
   .sBlock{display: block}
   .sInline-block{display: inline-block}
   .sTable-cell{display: table-cell}
@@ -736,7 +735,6 @@ nav+.container{margin-top:3em;}
   .s-xxxl { font-size: 3em }
 }
 @media screen and (min-width:28em) {
-  .container{width: 28em}
   .xsBlock{display: block}
   .xsInline-block{display: inline-block}
   .xsTable-cell{display: table-cell}
@@ -755,7 +753,6 @@ nav+.container{margin-top:3em;}
   .xs-xxxl { font-size: 3em }
 }
 @media screen and (min-width:35.5em) {
-  .container{width: 35.5em}
   .mBlock{display: block}
   .mInline-block{display: inline-block}
   .mTable-cell{display: table-cell}
@@ -774,7 +771,6 @@ nav+.container{margin-top:3em;}
   .m-xxxl { font-size: 3em }
 }
 @media screen and (min-width:48em) {
-  .container{max-width: 48em}
   .xmBlock{display: block}
   .xmInline-block{display: inline-block}
   .xmTable-cell{display: table-cell}
@@ -793,10 +789,7 @@ nav+.container{margin-top:3em;}
   .xm-xxxl { font-size: 3em }
   table.xmNormalTable .columnLabel{display: none;}
   table.xmNormalTable tr {display: table-row;}
-  table.xmNormalTable tr th,table.xmNormalTable tr td{display: table-cell;}
-}
-@media screen and (min-width:60em) {
-  .container{max-width: 60em}
+  table.xmNormalTable tr th,table.xmNormalTable tr td{display: table-cell; padding: 0.3em;}
 }
 @media screen and (min-width:64em) {
   .container{max-width: 64em}

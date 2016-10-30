@@ -1,7 +1,8 @@
-#header{margin-bottom:0.5em;}
-#header .icon{width: 32px; height: 32px;}
+#header{ position: fixed; top: 0; left: 0; width: 100%; background: #fff; z-index: 99; padding:0.25em 0.5em 0;}
+#header .container{margin:0.5em auto 0.5em;}
+#header .icon,#header .brand-name{height: 2em;}
 #header h1, #header img{display: block; float: left;}
-#header h1{padding: 0.14em 0 0.14em 0.4em;margin:0;font-weight: 400;font-size: 1.5em;}
+#header h1{display: none}
 
 #analysisImage{ position: relative;
 -webkit-box-shadow: 0 0px 0px 2px #ddd;
@@ -26,8 +27,12 @@ box-shadow:0 0px 0px 2px #ddd;}
 
 #area{position: absolute; top: 0; left: 0; z-index: -1; background-color: #fff0f0}
 
-#filter input,#filter img{max-width:300px}
+#filter input,#filter img{max-width:300px; width: 100%}
 
+.va-bottom{vertical-align: bottom;}
+.material-icons{font-size: 120%}
+
+.container{max-width: 48em; margin-top:3em;}
 
 /* Webkit */
 input[type=range] {

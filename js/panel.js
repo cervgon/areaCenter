@@ -1,5 +1,10 @@
 var imgSrc;
 var imageData = [];
+var colors = [];
+
+var processColors = true;
+var MIN_AMOUNT_COLOR = 3;
+
 
 function uploadImage(){
     imgSrc = null;
@@ -46,13 +51,51 @@ function multiple(value, multiple)
     else
         return false;
 }
+
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function foo(arr) {
+    var a = [], b = [], prev;
+    
+    arr.sort();
+    for ( var i = 0; i < arr.length; i++ ) {
+        if ( arr[i] !== prev ) {
+            a.push(arr[i]);
+            b.push(1);
+        } else {
+            b[b.length-1]++;
+        }
+        prev = arr[i];
+    }
+    
+    return [a, b];
+}
+
+function showColors(){
+    $('#colorsList').empty();
+    var outputColors = foo(colors);
+    for (var i = 0; i < outputColors[0].length; i++) {
+        if(outputColors[1][i]>MIN_AMOUNT_COLOR){
+            console.log(outputColors[0][i]+' '+outputColors[1][i]);
+            $("#colorsList").append('<li style="width:16px; height:16px; list-style:none; display:inline-block; background:'+outputColors[0][i]+'"></li>');
+        }
+    }
+}
+
 function generate(imgSrc){
     var done = false;
     
     imageData = [];
     img = new Image();
-    if(imgSrc == null || imgSrc == undefined){
-    img.src = "brand.png";
+    if(imgSrc === null || imgSrc === undefined){
+        img.src = $('#previewImg').attr('src');
     }
     else{
        img.src =  imgSrc;
@@ -120,6 +163,9 @@ function generate(imgSrc){
 
         pixelData = null;
 
+        // Reset colors array
+        colors = [];
+
         for (var x = 0; x <= width; x = x+step) {
             //console.time('test')
             for (var y = 0; y <= height; y= y+step) {
@@ -133,6 +179,12 @@ function generate(imgSrc){
 
                 if (value > filter && alpha > 0) {
                     counterPix++;
+
+                    if(processColors){
+                        if(multiple(counterPix,5)){
+                            colors[counterPix/5]=rgbToHex(pixelData[0],pixelData[1],pixelData[2]);
+                        }
+                    }
 
                     yg = yg + (y * value);
                     xg = xg + (x * value);
@@ -169,9 +221,7 @@ function generate(imgSrc){
                         downPos=height;
                     }
                     $('#output').html('xg: '+ xgFinal+'   yg: '+ygFinal+'<br><br>downPos: '+ downPos+'   upPos: '+upPos+'<br><br>leftPos: '+ leftPos+'   rightPos: '+rightPos+'<br><br>counter: '+ counter+'   counterPix: '+counterPix+'<br><br>Area:'+area+'%');
-        
-                    //  console.log(imageData);
-                
+
                     $('#previewImg').attr("src",imgSrc);
 
                     var scale = 1.0;
@@ -203,6 +253,10 @@ function generate(imgSrc){
                     done = true;
                     //console.log('done');
 
+                    if(processColors){
+                        showColors();
+                    }
+
                     return false;
                 }
                 if(counter == 2000){
@@ -228,9 +282,14 @@ function areaMomentOfInertia (){
 
 var showValTimeOut;
 function showVal(newVal){
-    //document.getElementById("valBox").innerHTML=newVal;
-    localStorage.setItem("filter",newVal);
+    clearTimeout(showValTimeOut);
+    showValTimeOut = setTimeout(function(){
+        localStorage.setItem("filter",newVal);
+        generate();
+    }, 1000);
 }
+
+
 
 $(document).ready(function(){
     var step;
@@ -242,13 +301,10 @@ $(document).ready(function(){
     var xgFinal = 0;
     var ygFinal = 0;
 
-    generate();
-
     uploadImage();
     var initFilter = localStorage.getItem("filter");
-    if(initFilter == null || initFilter == undefined){
+    if(initFilter === null || initFilter === undefined){
         initFilter = 70;
-        console.log("fuck");
     }
     $("#filter input[type=range]").val(initFilter);
     showVal(initFilter);
