@@ -1,10 +1,31 @@
 var imgSrc;
 var imageData = [];
-var colors = [];
+var filter = 70;
+var chromeApp = false;
+var storage;
 
-var processColors = true;
-var MIN_AMOUNT_COLOR = 3;
-
+function hideAnalysisData(){
+    $("#xg").css('display','none');
+    $("#yg").css('display','none');
+    $("#left").css('display','none');
+    $("#right").css('display','none');
+    $("#top").css('display','none');
+    $("#bottom").css('display','none');
+    $("#area").css('display','none');
+}
+function showAnalysisData(){
+    $("#left").fadeIn(200);
+    $("#right").fadeIn(200);
+    $("#top").fadeIn(200);
+    $("#bottom").fadeIn(200);
+    setTimeout(function(){
+        $("#area").fadeIn(200);
+    },200);
+    setTimeout(function(){
+        $("#xg").fadeIn(200);
+        $("#yg").fadeIn(200);
+    },400);
+}
 
 function uploadImage(){
     imgSrc = null;
@@ -43,53 +64,21 @@ var getEta = function (t,startTime,a,step){
     var timeRem = Math.floor(eta-difTime);
     return([eta,timeRem]);
 };
+
 function multiple(value, multiple)
 {
     rest = value % multiple;
-    if(rest==0)
+    if(rest===0)
         return true;
     else
         return false;
 }
 
-function componentToHex(c) {
-    var hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-}
-
-function rgbToHex(r, g, b) {
-    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-}
-
-function foo(arr) {
-    var a = [], b = [], prev;
-    
-    arr.sort();
-    for ( var i = 0; i < arr.length; i++ ) {
-        if ( arr[i] !== prev ) {
-            a.push(arr[i]);
-            b.push(1);
-        } else {
-            b[b.length-1]++;
-        }
-        prev = arr[i];
-    }
-    
-    return [a, b];
-}
-
-function showColors(){
-    $('#colorsList').empty();
-    var outputColors = foo(colors);
-    for (var i = 0; i < outputColors[0].length; i++) {
-        if(outputColors[1][i]>MIN_AMOUNT_COLOR){
-            console.log(outputColors[0][i]+' '+outputColors[1][i]);
-            $("#colorsList").append('<li style="width:16px; height:16px; list-style:none; display:inline-block; background:'+outputColors[0][i]+'"></li>');
-        }
-    }
-}
 
 function generate(imgSrc){
+
+    hideAnalysisData();
+
     var done = false;
     
     imageData = [];
@@ -111,30 +100,26 @@ function generate(imgSrc){
         width = Math.floor(this.canvas.width)-1;
         height =Math.floor(this.canvas.height)-1;
 
-        var filter;
-        var filterSaved = localStorage.getItem("filter");
-        if(!filterSaved){
-            filter = 5;
+        var valueFilter;
+        if(!filter){
+            valueFilter = 5;
         }
         else{
-            filter = 105 - filterSaved;
+            valueFilter = 105 - filter;
         }
         step = 1;
         var a = width*height;
-        if(a>66000){
+        if(a>95000){
             step = 2;
         }
-        if(a>95000){
+        if(a>1300000){
             step = 3;
         }
-        if(a>1300000){
+        if(a>2600000){
             step = 5;
         }
-        if(a>2600000){
-            step = 8;
-        }
         if(a>5400000){
-            step = 13;
+            step = 8;
         }
 
         var counter = 0;
@@ -150,7 +135,7 @@ function generate(imgSrc){
         xg = 0;
 
         var xx = 0;
-        var y = 0;
+        var yy = 0;
         var counterPix = 0;
         var pix = 0;
 
@@ -163,9 +148,6 @@ function generate(imgSrc){
 
         pixelData = null;
 
-        // Reset colors array
-        colors = [];
-
         for (var x = 0; x <= width; x = x+step) {
             //console.time('test')
             for (var y = 0; y <= height; y= y+step) {
@@ -177,14 +159,8 @@ function generate(imgSrc){
                 counter++;
                 imageData[counter] = value;
 
-                if (value > filter && alpha > 0) {
+                if (value > valueFilter && alpha > 0) {
                     counterPix++;
-
-                    if(processColors){
-                        if(multiple(counterPix,5)){
-                            colors[counterPix/5]=rgbToHex(pixelData[0],pixelData[1],pixelData[2]);
-                        }
-                    }
 
                     yg = yg + (y * value);
                     xg = xg + (x * value);
@@ -206,6 +182,8 @@ function generate(imgSrc){
                     totalArea = totalArea + (alpha/255);
                 }
                 if(counter >= limit){
+                    showAnalysisData();
+
                     ygFinal =  Math.floor(yg / valueT);
                     if(!ygFinal){ygFinal=Math.floor(height/2);}
                     xgFinal =  Math.floor(xg / valueT);
@@ -237,25 +215,20 @@ function generate(imgSrc){
                     }
                     $('#yg').height(ygFinal*scale);
                     var tempLeft = leftPos*scale-1;
-                    if(tempLeft<0){tempLeft =0};
+                    if(tempLeft<0){tempLeft =0}
                     $('#left').width(tempLeft);
                     $('#right').width(rightPos*scale);
                     $('#top').height(upPos*scale-1);
                     var tempBottom = downPos*scale-1;
-                    if(tempBottom<0){tempBottom =0};
+                    if(tempBottom<0){tempBottom =0}
                     $('#bottom').height(tempBottom);
                     $('#area').height((downPos*scale)-(upPos*scale));
                     $('#area').width((rightPos*scale)-(leftPos*scale));
                     $('#area').css('top',upPos*scale);
                     $('#area').css('left',leftPos*scale);
-                    outputDiv.innerHTML = "ms since the start: " + (new Date() - startTime);
+                    //outputDiv.innerHTML = "ms since the start: " + (new Date() - startTime);
 
                     done = true;
-                    //console.log('done');
-
-                    if(processColors){
-                        showColors();
-                    }
 
                     return false;
                 }
@@ -284,14 +257,22 @@ var showValTimeOut;
 function showVal(newVal){
     clearTimeout(showValTimeOut);
     showValTimeOut = setTimeout(function(){
-        localStorage.setItem("filter",newVal);
         generate();
+        newVal = Number(newVal);
+        if(chromeApp){
+            storage.set({'filter':newVal});
+        }
+        else{
+            localStorage.setItem("filter",newVal);
+        }
     }, 1000);
 }
 
-
-
 $(document).ready(function(){
+    if(chrome.storage !== undefined){
+        storage = chrome.storage.local;
+        chromeApp = true;
+    }
     var step;
     var pixelData;
     var width = 0;
@@ -302,33 +283,27 @@ $(document).ready(function(){
     var ygFinal = 0;
 
     uploadImage();
-    var initFilter = localStorage.getItem("filter");
-    if(initFilter === null || initFilter === undefined){
-        initFilter = 70;
+    hideAnalysisData();
+    if(chromeApp){
+        storage.get('filter',function(result){
+            filter = result.filter;
+            console.log('filter',filter);
+            if(!filter){filter = 70;}
+            $("#filter input[type=range]").val(filter);
+            showVal(filter);
+        });
     }
-    $("#filter input[type=range]").val(initFilter);
-    showVal(initFilter);
+    else{
+        if(localStorage){
+            filter = localStorage.getItem("filter");
+        }
+        if(!filter){filter = 70;}
+        $("#filter input[type=range]").val(filter);
+        showVal(filter);
+    }
+
+    $('#range').on('change', function(){
+        filter = $(this).val();
+        showVal(filter);
+    });
 });
-
-/* TODO
-
-Área superficial
-Posición del Centro de gravedad (centroide): X(cg) y Y(cg)
-Momento de Inercia respecto al eje X (Ixx). También llamado segundo momento de área.
-Momento de Inercia respecto al eje Y (Iyy)
-Producto de Inercia (Pxy)
-Momento Polar de Inercia (Jo)
-Radio de giro respecto al eje X (Kx)
-Radio de giro respecto al eje Y (Ky)
-Momento de área respecto al eje X (Mx). También llamado primer momento de área.
-Momento de área respecto al eje Y (My).
-Respecto a los ejes X'Y', actualmente se calcula:
-
-Momento de Inercia respecto al eje Xc (I'xx)
-Momento de Inercia respecto al eje Y' (I'yy)
-Producto de Inercia respecto a los ejes X'Y'
-Momento Polar de Inercia respecto a los ejes X'Y' (Jo)
-Radio de giro respecto al eje X' (Kx')
-Radio de giro respecto al eje Y' (Ky')
-
-*/

@@ -657,6 +657,7 @@ table tr th.textRight .label,table tr td.textRight .label{ margin-left: 0.5em; m
 
 table.minimalistic{ width: 100%; margin-bottom: 0.25em; color: #333 }
 table.minimalistic tr { border-bottom: .1em solid #eee; }
+table.minimalistic.even tr:nth-child(even){background-color: #fafafa}
 table.minimalistic tr:first-child { border-bottom: .1em solid #ddd; }
 table.minimalistic .uib-datepicker tr:first-child,
 table.minimalistic .uib-datepicker tr {border-bottom: none}
@@ -677,7 +678,7 @@ table.bordered th, table.bordered tr.withBG td{color: #333; font-weight: 400; pa
 table.xmNormalTable{}
 table.xmNormalTable tr {padding:1em 0; display: block}
 table.xmNormalTable tr th{display: none}
-table.xmNormalTable tr td{display: block; padding: 0}
+table.xmNormalTable tr td{display: block; padding: 0 0.5em}
 table.xmNormalTable .columnLabel{display: inline;}
 
 /* Popup */

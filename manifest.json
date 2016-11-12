@@ -1,0 +1,16 @@
+{
+  "name": "Area Center",
+  "description": "Measure the gravity center of any iamge",
+  "version": "0.1",
+  "manifest_version": 2,
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "permissions": [
+    "storage",
+    "unlimitedStorage"
+  ],
+  "icons": { "16": "favicon.png", "128": "128.png" }
+}
