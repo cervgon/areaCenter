@@ -32,28 +32,28 @@ function uploadImage(){
     $("#uploadImage").on("change", function(){
         // Get a reference to the fileList
         var files = !!this.files ? this.files : [];
-     
+
         // If no files were selected, or no FileReader support, return
         if (!files.length || !window.FileReader) return;
-     
+
         // Only proceed if the selected file is an image
         if (/^image/.test( files[0].type)){
-     
+
             // Create a new instance of the FileReader
             var reader = new FileReader();
-     
+
             // Read the local file as a DataURL
             reader.readAsDataURL(files[0]);
-     
+
             // When loaded, set image data as background of div
             reader.onloadend = function(){
                 //$("#uploadPreview").attr("src", this.result);
                 imgSrc = this.result;
                 generate(imgSrc);
             };
-     
+
         }
-     
+
     });
 }
 
@@ -80,7 +80,7 @@ function generate(imgSrc){
     hideAnalysisData();
 
     var done = false;
-    
+
     imageData = [];
     img = new Image();
     if(imgSrc === null || imgSrc === undefined){
@@ -123,7 +123,7 @@ function generate(imgSrc){
         }
 
         var counter = 0;
-        
+
         var downPos = 0;
         var upPos = height;
         var rightPos = 0;
@@ -248,7 +248,7 @@ function generate(imgSrc){
     };
 }
 
-function areaMomentOfInertia (){   
+function areaMomentOfInertia (){
     var amoi = 0;
     $('#areaMomentOfInertiaPre').html('areaMomentOfInertia: '+amoi+xgFinal);
 }
@@ -269,9 +269,12 @@ function showVal(newVal){
 }
 
 $(document).ready(function(){
-    if(chrome.storage !== undefined){
-        storage = chrome.storage.local;
-        chromeApp = true;
+    var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    if(isChrome){
+        if(chrome.storage !== undefined){
+            storage = chrome.storage.local;
+            chromeApp = true;
+        }
     }
     var step;
     var pixelData;
