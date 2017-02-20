@@ -12,6 +12,7 @@ function hideAnalysisData(){
     $("#top").css('display','none');
     $("#bottom").css('display','none');
     $("#area").css('display','none');
+    $("#cg").css('display','none');
 }
 function showAnalysisData(){
     $("#left").fadeIn(200);
@@ -24,6 +25,7 @@ function showAnalysisData(){
     setTimeout(function(){
         $("#xg").fadeIn(200);
         $("#yg").fadeIn(200);
+        $("#cg").fadeIn(200);
     },400);
 }
 
@@ -214,6 +216,8 @@ function generate(imgSrc){
                         $('#yg').html('<div><span>yg</span></div>');
                     }
                     $('#yg').height(ygFinal*scale);
+                    $('#cg').css('left',(xgFinal*scale)-12);
+                    $('#cg').css('top',(ygFinal*scale)-12);
                     var tempLeft = leftPos*scale-1;
                     if(tempLeft<0){tempLeft =0}
                     $('#left').width(tempLeft);
@@ -227,7 +231,29 @@ function generate(imgSrc){
                     $('#area').css('top',upPos*scale);
                     $('#area').css('left',leftPos*scale);
                     //outputDiv.innerHTML = "ms since the start: " + (new Date() - startTime);
-
+                    
+                    var centerColor = this.canvas.getContext('2d').getImageData(xgFinal, ygFinal, 1, 1).data;
+                    centerColor = tinycolor({r:centerColor[0], g:centerColor[1], b:centerColor[2]}).toRgb();
+                    var gs = tinycolor(centerColor).greyscale().toRgb();
+                    ccRgb = tinycolor(centerColor).toRgb();
+                    if(Math.abs(ccRgb.r - gs.r) > 3 && Math.abs(ccRgb.g - gs.g) > 3 && Math.abs(ccRgb.b - gs.b) > 3){
+                        centerColorInv = tinycolor(tinycolor(centerColor).spin(180)).toHsl();
+                        centerColorInv.s = 95;
+                        var centerColorInvHex = tinycolor(centerColorInv).toHexString();
+                        $('#xg').css('border-right-color',centerColorInvHex);
+                        $('#yg').css('border-bottom-color',centerColorInvHex);
+                        $('#left').css('border-right-color',centerColorInvHex);
+                        $('#right').css('border-right-color',centerColorInvHex);
+                        $('#top').css('border-bottom-color',centerColorInvHex);
+                        $('#bottom').css('border-bottom-color',centerColorInvHex);
+                        var cgColor = tinycolor(centerColorInv).darken().toHexString();
+                        var cgBG = `"data:image/svg+xml;charset=UTF-8, %3Csvg fill='%23`+cgColor.substring(1)+`' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E' %3Cpath d='M12,2 C6.5,2 2,6.5 2,12 C2,17.5 6.5,22 12,22 C17.5,22 22,17.5 22,12 C22,6.5 17.5,2 12,2 Z M12,20 L12,12 L4,12 C4,7.6 7.6,4 12,4 L12,12 L20,12 C20,16.4 16.4,20 12,20 Z'/%3E' %3Cpath d='M0 0h24v24H0z' fill='none'/%3E'%3C/svg%3E"`;
+                        $('#cg').css("background-image","url("+cgBG+")");
+                        var areaBG = centerColorInv;
+                        areaBG.l = 95;
+                        areaBG = tinycolor(areaBG).toHexString();
+                        $('#area').css('background-color',areaBG);
+                    }
                     done = true;
 
                     return false;
