@@ -8,8 +8,6 @@ https://github.com/cervgon/gui/blob/master/LICENSE
 /* Reset */
 progress,sub,sup { vertical-align: baseline }button,hr,input { overflow: visible }[type=checkbox],[type=radio],legend { box-sizing: border-box; padding: 0; display: inline-block;}html { font-family: sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }body { margin: 0 }article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary { display: block }audio,canvas,progress,video { display: inline-block }audio:not([controls]) { display: none; height: 0; }[hidden],template { display: none }a { background-color: transparent; -webkit-text-decoration-skip: objects; }a:active,a:hover { outline-width: 0 }abbr[title] { border-bottom: none; text-decoration: underline; text-decoration: underline dotted; }b,strong { font-weight: bolder }dfn { font-style: italic }h1 { font-size: 2em; margin: .67em 0; }mark { background-color: #ff0; color: #000; }small { font-size: 80% }sub,sup { font-size: 75%; line-height: 0; position: relative; }sub { bottom: -.25em }sup { top: -.5em }img { border-style: none }svg:not(:root) { overflow: hidden }code,kbd,pre,samp { font-family: monospace,monospace; font-size: 1em; }figure { margin: 1em 40px }hr { box-sizing: content-box; height: 0; }button,input,select,textarea { font: inherit; margin: 0; }optgroup { font-weight: 700 }button,select { text-transform: none }[type=reset],[type=submit],button,html [type=button] { -webkit-appearance: button }[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner { border-style: none; padding: 0; }[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring { outline: ButtonText dotted 1px }fieldset { border: 1px solid silver; margin: 0 2px; padding: .35em .625em .75em; }legend { color: inherit; display: table; max-width: 100%; white-space: normal; }textarea { overflow: auto }[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button { height: auto }[type=search] { -webkit-appearance: textfield; outline-offset: -2px; }[type=search]::-webkit-search-cancel-button,[type=search]::-webkit-search-decoration { -webkit-appearance: none }::-webkit-input-placeholder { color: inherit; opacity: .54; }::-webkit-file-upload-button { -webkit-appearance: button; font: inherit; }
 
-@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700,900'");
-
 /* Tags */
 html { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
 *,
@@ -77,7 +75,7 @@ button[disabled="disabled"],
 .btn[disabled="disabled"],
 a.btn[disabled="disabled"],
 input[type="submit"][disabled="disabled"],
-input[type="button"][disabled="disabled"]{background-color: #ddd !important; border-color: #aaa !important; color: #999 !important; text-decoration: none !important; text-shadow:none !important;  cursor: not-allowed;}  
+input[type="button"][disabled="disabled"]{background-color: #ddd !important; border-color: #aaa !important; color: #999 !important; text-decoration: none !important; text-shadow:none !important;  cursor: not-allowed;}
 button i.material-icons{vertical-align: middle;margin:0;}
 button i.material-icons,a i.material-icons,label i.material-icons{ vertical-align: middle;}
 /* Button Classes */
@@ -294,7 +292,7 @@ video{}
   10%, 90% {
     transform: translate3d(-1px, 0, 0);
   }
-  
+
   20%, 80% {
     transform: translate3d(2px, 0, 0);
   }
@@ -586,7 +584,7 @@ video{}
 .msg.msg-green { background-color: #ddf0e2; border: 1px solid #86c49a; color: #3a8a54; }
 .msg.msg-red,
 input.wrong, input[type="text"].wrong,input[type="email"].wrong, input[type="number"].wrong, input[type="file"].wrong, textarea.wrong,
-input.wrong:focus, input[type="text"].wrong:focus, input[type="email"].wrong:focus, input[type="number"].wrong:focus, input[type="file"].wrong:focus, textarea.wrong:focus{ background-color: #f6eaea; border-color: #d48c8c; color: #a02222; 
+input.wrong:focus, input[type="text"].wrong:focus, input[type="email"].wrong:focus, input[type="number"].wrong:focus, input[type="file"].wrong:focus, textarea.wrong:focus{ background-color: #f6eaea; border-color: #d48c8c; color: #a02222;
   animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;

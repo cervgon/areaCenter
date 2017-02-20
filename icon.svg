@@ -1,10 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="304px" height="304px" viewBox="2 -2 304 304" style="enable-background:new 2 -2 304 304;" xml:space="preserve">
-<g id="XMLID_74_">
-	<polygon id="XMLID_76_" points="22.2,42 10.4,54 38,54 38,62 42,62 42,53.1 42,42 37.8,42 	"/>
-	<rect id="XMLID_106_" x="46" y="42" width="12" height="12"/>
-	<polygon id="XMLID_107_" points="38,25.8 30.2,34 2,34 2,38 37.8,38 42,38 42,33.2 42,21.8 42,-2 38,-2 	"/>
-	<polygon id="XMLID_108_" points="58,34 58,5.8 46,17.8 46,33.2 46,38 66,38 66,34 	"/>
-</g>
+<svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12,2 C6.5,2 2,6.5 2,12 C2,17.5 6.5,22 12,22 C17.5,22 22,17.5 22,12 C22,6.5 17.5,2 12,2 Z M12,20 L12,12 L4,12 C4,7.6 7.6,4 12,4 L12,12 L20,12 C20,16.4 16.4,20 12,20 Z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
 </svg>
