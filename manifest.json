@@ -12,5 +12,5 @@
     "storage",
     "unlimitedStorage"
   ],
-  "icons": { "16": "favicon.png", "128": "128.png" }
+  "icons": { "16": "icon.png", "128": "128.png" }
 }
