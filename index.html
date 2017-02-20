@@ -1,40 +1,32 @@
 <html>
   <head>
-    <title>AreaCenter</title>
+    <title>CG calculator</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="shortcut" href="favicon.png">
-     <!-- non-retina iPhone pre iOS 7 -->
-    <link rel="apple-touch-icon" href="apple-touch-icon-57x57.png" sizes="57x57">
-    <!-- non-retina iPad pre iOS 7 -->
-    <link rel="apple-touch-icon" href="apple-touch-icon-72x72.png" sizes="72x72">
-    <!-- non-retina iPad iOS 7 -->
-    <link rel="apple-touch-icon" href="apple-touch-icon-76x76.png" sizes="76x76">
-    <!-- retina iPhone pre iOS 7 -->
-    <link rel="apple-touch-icon" href="apple-touch-icon-114x114.png" sizes="114x114">
-    <!-- retina iPhone iOS 7 -->
-    <link rel="apple-touch-icon" href="apple-touch-icon-120x120.png" sizes="120x120">
-    <!-- retina iPad pre iOS 7 -->
-    <link rel="apple-touch-icon" href="apple-touch-icon-144x144.png" sizes="144x144">
-    <!-- retina iPad iOS 7 -->
-    <link rel="apple-touch-icon" href="apple-touch-icon-152x152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="favicon-57.png" sizes="57x57">
+    <link rel="apple-touch-icon" href="favicon-72.png" sizes="72x72">
+    <link rel="apple-touch-icon" href="favicon-76.png" sizes="76x76">
+    <link rel="apple-touch-icon" href="favicon-114.png" sizes="114x114">
+    <link rel="apple-touch-icon" href="favicon-120.png" sizes="120x120">
+    <link rel="apple-touch-icon" href="favicon-144.png" sizes="144x144">
+    <link rel="apple-touch-icon" href="favicon-152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="favicon-180.png" sizes="180x180">
     <link rel="mask-icon" href="icon.svg" color="#333">
     <meta name="apple-mobile-web-app-status-bar-style" content="red">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <script src="js/jquery.min.js"></script>
     <script src="js/panel.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/gui.css">
-    <link rel="stylesheet" type="text/css" href="css/fonts/material-icons.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
   </head>
   <body class="p05">
     <div id="header">
       <div class="container">
-        <img class="icon" src="icon.png">
-        <h1>Area Center</h1>
-        <img class="brand-name" src="brand-name.png">
+        <h1>CG calculator</h1>
         <input id="uploadImage" type="file" name="photoimage" class="fimg1" style="display: none" />
-        <label for="uploadImage" class="xs btn btnGreen uppercase va-bottom floatRight"><i class="material-icons va-bottom">&#xE410;</i> Select image
+        <label for="uploadImage" class="xs btn btnGreen uppercase va-bottom floatRight">Select image
         </label>
         <br class="clear">
       </div>
@@ -47,7 +39,7 @@
         <div id="right"></div>
         <div id="top"></div>
         <div id="bottom"></div>
-        <img id="previewImg" src="brand.png">
+        <img id="previewImg" src="image.png">
         <div id="area"></div>
       </div>
       <hr class="transparent">
@@ -55,21 +47,11 @@
       <hr>
       <div id="filter" class="p0-05 inline-block">
         <label class="xm block m0">
-          <i class="material-icons va-bottom">&#xE3DB;</i>
-          <span class="va-bottom fw400 "> Filter B and W</span>
+          <span class="va-bottom fw300">Filter B and W</span>
         </label>
         <input type="range" min="10" max="100" step="5" id="range">
         <img class="block" src="contrast.png">
       </div>
-      <!--
-      <hr class="big">
-      <span id="valBox"></span>
-      <pre id="output"></pre>
-      <pre id="Ix"></pre>
-      <button id="areaMomentOfInertia">Area moment of inertia</button>
-      <pre id="areaMomentOfInertiaPre"></pre>
-      <pre id="array"></pre>
-      -->
     </div>
   </body>
 </html>

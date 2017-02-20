@@ -7,5 +7,5 @@ chrome.app.runtime.onLaunched.addListener(function() {
   });
   if(!chrome.storage){
   	chrome.storage.local.set({'filter':70});
-  };
+  }
 });
