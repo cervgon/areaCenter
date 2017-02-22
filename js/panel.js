@@ -216,8 +216,8 @@ function generate(imgSrc){
                         $('#yg').html('<div><span>yg</span></div>');
                     }
                     $('#yg').height(ygFinal*scale);
-                    $('#cg').css('left',(xgFinal*scale)-12);
-                    $('#cg').css('top',(ygFinal*scale)-12);
+                    $('#cg').css('left',(xgFinal*scale)-10);
+                    $('#cg').css('top',(ygFinal*scale)-10);
                     var tempLeft = leftPos*scale-1;
                     if(tempLeft<0){tempLeft =0}
                     $('#left').width(tempLeft);
