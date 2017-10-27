@@ -1,9 +1,12 @@
-#header{ position: fixed; top: 0; left: 0; width: 100%; background: #fff; z-index: 99; padding:0.25em 0.5em 0;}
+
+#header{ width: 100%; background: #fff; z-index: 99; padding:0.25em 0.5em 0;}
 #header .container{margin:0.5em auto 0.5em;}
 #header .icon,#header .brand-name{height: 2em;}
 #header h1 {display: block; float: left; font-weight: 300; font-size: 1.5em; margin: 0; padding: 0 0 0 1.25em; background: url("data:image/svg+xml;charset=UTF-8, %3Csvg fill='%23000000' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E' %3Cpath d='M12,2 C6.5,2 2,6.5 2,12 C2,17.5 6.5,22 12,22 C17.5,22 22,17.5 22,12 C22,6.5 17.5,2 12,2 Z M12,20 L12,12 L4,12 C4,7.6 7.6,4 12,4 L12,12 L20,12 C20,16.4 16.4,20 12,20 Z'/%3E' %3Cpath d='M0 0h24v24H0z' fill='none'/%3E'%3C/svg%3E") no-repeat center left}
 
-#analysisImage{ position: relative; -webkit-box-shadow: 0 0px 0px 2px #ddd; -moz-box-shadow: 0 0px 0px 2px #ddd; box-shadow:0 0px 0px 2px #ddd;}
+#analysisImage{ position: relative; -webkit-box-shadow: 0 3px 11px -1px rgba(0,0,0,0.2); -moz-box-shadow: 0 3px 11px -1px rgba(0,0,0,0.2); box-shadow: 0 3px 11px -1px rgba(0,0,0,0.2);}
+#loading { text-align:center; width: 100%; height: 100%; position: absolute; z-index: 9999; top: 0; left: 0; background-color: rgba(255,255,255,0.8)}
+#loading span {position: absolute; z-index: 9999; bottom: 0; left: 0; padding:10px 0; width: 100%; font-size: 11px}
 #output{}
 #analysisImage img{}
 
@@ -11,12 +14,12 @@
 #cg{position:absolute; top: 0; left: 0; width: 0; height: 20px; width:20px; z-index: 15;
 border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 background: url("data:image/svg+xml;charset=UTF-8, %3Csvg fill='%23ff0000' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E' %3Cpath d='M12,2 C6.5,2 2,6.5 2,12 C2,17.5 6.5,22 12,22 C17.5,22 22,17.5 22,12 C22,6.5 17.5,2 12,2 Z M12,20 L12,12 L4,12 C4,7.6 7.6,4 12,4 L12,12 L20,12 C20,16.4 16.4,20 12,20 Z'/%3E' %3Cpath d='M0 0h24v24H0z' fill='none'/%3E'%3C/svg%3E") no-repeat center #fff; background-size: 24px}
-#xg{position:absolute; top: 0; left: 0; width: 0; height: 100%; z-index: 10; border-right:1px solid #f00;}
+#xg{position:absolute; top: 0; left: 0; width: 0; height: 100%; z-index: 10; border-right:1px solid #cc0000;}
 #xg div{position: relative; width: 100%; height: 100%;}
-#xg div span{position: absolute; bottom: 0; right: 0; font-size: 10px; color: #999; padding: 3px}
-#yg{position:absolute; top: 0; left: 0; width: 100%; height: 0; z-index: 11; border-bottom:1px solid #f00;}
+#xg div span{position: absolute; bottom: 0; right: 0; font-size: 10px; color: #cc0000; padding: 3px}
+#yg{position:absolute; top: 0; left: 0; width: 100%; height: 0; z-index: 11; border-bottom:1px solid #cc0000;}
 #yg div{position: relative; width: 100%; height: 100%;}
-#yg div span{position: absolute; bottom: 0; right: 0; font-size: 10px; color: #999; padding: 3px}
+#yg div span{position: absolute; bottom: 0; right: 0; font-size: 10px; color: #cc0000; padding: 3px}
 
 #left{position:absolute; top: 0; left: 0; width: 0; height: 100%; z-index: 1; border-right:1px solid #fcc;}
 #right{position:absolute; top: 0; left: 0; width: 0; height: 100%; z-index: 2; border-right:1px solid #fcc;}
@@ -32,7 +35,9 @@ background: url("data:image/svg+xml;charset=UTF-8, %3Csvg fill='%23ff0000' heigh
 .va-bottom{vertical-align: bottom;}
 .material-icons{font-size: 120%}
 
-.container{max-width: 48em; margin-top:3em;}
+.container{max-width: 48em }
+
+.label {line-height: 2.5em}
 
 /* Webkit */
 input[type=range] { -webkit-appearance: none; width: 100%; border-radius: 8px; height: 7px; border: 1px solid #bdc3c7; background-color: #fff; padding: 0; margin: 15px 0 }
@@ -48,3 +53,11 @@ input[type="range"]::-ms-fill-upper { background: transparent }
 input[type="range"]::-ms-track { border-radius: 8px; height: 7px; border: 1px solid #bdc3c7; background-color: #fff }
 input[type="range"]::-ms-thumb { background-color: #ecf0f1; border: 1px solid #bdc3c7; width: 22px; height: 22px; border-radius: 11px; cursor: pointer }
 pre{background: none}
+
+.g1 {width: 100%; float: left;}
+
+.description{display: none}
+@media screen and (min-width: 48em) {
+	.gxm1-2 {width: 50%}
+	.description{display: inline}
+}

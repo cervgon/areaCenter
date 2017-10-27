@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>CG calculator</title>
-    <meta name="keywords" content="gravity,center,cg,calc,cgcalc,cervgon,image,balance,area,optic,calculator,measure,calibrate">
+    <meta name="keywords" content="gravity,center,cg,calc,cgcalc,cervgon,image,balance,area,optic,calculator,measure,calibrate,planes,brand">
     <meta name="description" content="Measure the center of gravity of any image">
     <meta name="author" content="Gonzalo Cervantes">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -23,20 +23,21 @@
     <script src="js/tinycolor.js"></script>
     <script src="js/panel.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/gui.css">
+    <link rel="stylesheet" type="text/css" href="css/ngui.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
   </head>
-  <body class="p05">
+  <body>
     <div id="header">
       <div class="container">
-        <h1>CG calculator</h1>
+        <h1>CG calculator <span class="description"><span class="fw200">|</span> <span class="xs fw300">Measure the center of gravity of any image</span></span></h1>
         <input id="uploadImage" type="file" name="photoimage" class="fimg1" style="display: none" />
-        <label for="uploadImage" class="xs btn btnGreen uppercase va-bottom floatRight">Select image
+        <label for="uploadImage" class="xs btn btnGreen uppercase va-bottom floatRight" tabindex="1">Select image
         </label>
         <br class="clear">
       </div>
     </div>
-    <div class="container">
+    <div class="container p05">
       <div id="analysisImage">
         <div id="cg"></div>
         <div id="xg"></div>
@@ -47,17 +48,30 @@
         <div id="bottom"></div>
         <img id="previewImg" src="image.png">
         <div id="area"></div>
+        <div id="loading"><span>Processing..</span></div>
       </div>
       <hr class="transparent">
       <img id="uploadPreview">
       <hr>
-      <div id="filter" class="p0-05 inline-block">
-        <label class="xm block m0">
-          <span class="va-bottom fw300">Contrast</span>
-        </label>
+      <div class="g1 gxm1-2">
+        <h2 class="m">Examples</h2>
+        <div class="p05-0">
+          <label class="label greenLabel" onclick="showLoading();generate('images/wing_section.png')">Wing Section</label>
+          <label class="label greenLabel" onclick="showLoading();generate('images/wings.png')">Wings</label>
+          <label class="label greenLabel" onclick="showLoading();generate('images/brand.png')">Brand</label>
+          <label class="label greenLabel" onclick="showLoading();generate('images/icon.png')">Icon</label>
+          <label class="label greenLabel" onclick="showLoading();generate('images/tool.png')">Tool</label>
+          <label class="label greenLabel" onclick="showLoading();generate('images/sign.png')">Sign</label>
+          <label class="label greenLabel" onclick="showLoading();generate('images/contrast.png')">Contrast</label>
+          <label class="label greenLabel" onclick="showLoading();generate('images/watch_hands.png')">Watch Hands</label>
+        </div>
+      </div>
+      <div id="filter" class="p0-05 inline-block g1 gxm1-2">
+        <h2 class="m">Settings</h2>
         <input type="range" min="10" max="100" step="5" id="range">
         <img class="block" src="contrast.png">
       </div>
+      <br>
     </div>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -1,6 +1,6 @@
 var imgSrc;
 var imageData = [];
-var filter = 70;
+var filter = 100;
 var chromeApp = false;
 var storage;
 
@@ -51,6 +51,7 @@ function uploadImage(){
             reader.onloadend = function(){
                 //$("#uploadPreview").attr("src", this.result);
                 imgSrc = this.result;
+                console.log(imgSrc);
                 generate(imgSrc);
             };
 
@@ -63,7 +64,7 @@ var getEta = function (t,startTime,a,step){
     var partialTime = new Date();
     var difTime =  partialTime - startTime;
     var eta = (a/step/step)*(partialTime-startTime)/t;
-    var timeRem = Math.floor(eta-difTime);
+    var timeRem = ~~(eta-difTime);
     return([eta,timeRem]);
 };
 
@@ -76,6 +77,9 @@ function multiple(value, multiple)
         return false;
 }
 
+function showLoading(){
+    $('#loading').fadeIn(200);
+}
 
 function generate(imgSrc){
 
@@ -99,8 +103,8 @@ function generate(imgSrc){
             this.canvas.height = this.height;
             this.canvas.getContext('2d').drawImage(this, 0, 0, this.width, this.height);
         }
-        width = Math.floor(this.canvas.width)-1;
-        height =Math.floor(this.canvas.height)-1;
+        width = ~~(this.canvas.width)-1;
+        height = ~~(this.canvas.height)-1;
 
         var valueFilter;
         if(!filter){
@@ -123,9 +127,7 @@ function generate(imgSrc){
         if(a>5400000){
             step = 8;
         }
-
         var counter = 0;
-
         var downPos = 0;
         var upPos = height;
         var rightPos = 0;
@@ -135,29 +137,23 @@ function generate(imgSrc){
         var valueT = 0;
         yg = 0;
         xg = 0;
-
         var xx = 0;
         var yy = 0;
         var counterPix = 0;
         var pix = 0;
-
         var totalArea = 0;
         var area = 0;
-
-        var limit = Math.floor((width+1)/step)*Math.floor((height+1)/step);
-
+        var limit = ~~((width+1)/step)*~~((height+1)/step);
         var startTime = new Date(), outputDiv = document.getElementById('outputTime');
-
         pixelData = null;
 
         for (var x = 0; x <= width; x = x+step) {
-            //console.time('test')
             for (var y = 0; y <= height; y= y+step) {
                 pixelData = this.canvas.getContext('2d').getImageData(x, y, 1, 1).data;
-                invValue = Math.floor((pixelData[0] * 299 + pixelData[1] * 587 + pixelData[2] * 114)/2550);
+                invValue = ~~((pixelData[0] * 299 + pixelData[1] * 587 + pixelData[2] * 114)/2550);
                 value = 100 - invValue;
                 var alpha = pixelData[3];
-                value = Math.floor(value* alpha / 255);
+                value = ~~(value* alpha / 255);
                 counter++;
                 imageData[counter] = value;
 
@@ -184,14 +180,15 @@ function generate(imgSrc){
                     totalArea = totalArea + (alpha/255);
                 }
                 if(counter >= limit){
+
                     showAnalysisData();
 
-                    ygFinal =  Math.floor(yg / valueT);
-                    if(!ygFinal){ygFinal=Math.floor(height/2);}
-                    xgFinal =  Math.floor(xg / valueT);
-                    if(!xgFinal){xgFinal=Math.floor(width/2);}
+                    ygFinal =  ~~(yg / valueT);
+                    if(!ygFinal){ygFinal=~~(height/2);}
+                    xgFinal =  ~~(xg / valueT);
+                    if(!xgFinal){xgFinal=~~(width/2);}
                     var tempFullArea = ((width+1)/step)*((height+1)/step);
-                    area = Math.floor(totalArea*10000/tempFullArea)/100;
+                    area = ~~(totalArea*10000/tempFullArea)/100;
                     rightPos = rightPos+step;
                     if((rightPos+(2*step))>=width){
                         rightPos=width;
@@ -200,7 +197,7 @@ function generate(imgSrc){
                     if((downPos+(2*step))>=height){
                         downPos=height;
                     }
-                    $('#output').html('xg: '+ xgFinal+'   yg: '+ygFinal+'<br><br>downPos: '+ downPos+'   upPos: '+upPos+'<br><br>leftPos: '+ leftPos+'   rightPos: '+rightPos+'<br><br>counter: '+ counter+'   counterPix: '+counterPix+'<br><br>Area:'+area+'%');
+                    //$('#output').html('xg: '+ xgFinal+' yg: '+ygFinal+'<br><br>downPos: '+ downPos+'   upPos: '+upPos+'<br><br>leftPos: '+ leftPos+'   rightPos: '+rightPos+'<br><br>counter: '+ counter+'   counterPix: '+counterPix+'<br><br>Area:'+area+'%');
 
                     $('#previewImg').attr("src",imgSrc);
 
@@ -208,7 +205,7 @@ function generate(imgSrc){
                     var winW = $('.container').width();
                     if(width > winW){
                         scale = winW/width;
-                        $('#previewImg').width(width*scale);
+                        $('#previewImg').width(~~(width*scale));
                     }
                     $('#xg').width(xgFinal*scale);
                     if(xgFinal>36 && ygFinal>36){
@@ -219,12 +216,12 @@ function generate(imgSrc){
                     $('#cg').css('left',(xgFinal*scale)-10);
                     $('#cg').css('top',(ygFinal*scale)-10);
                     var tempLeft = leftPos*scale-1;
-                    if(tempLeft<0){tempLeft =0}
+                    if(tempLeft<0){tempLeft =0;}
                     $('#left').width(tempLeft);
                     $('#right').width(rightPos*scale);
                     $('#top').height(upPos*scale-1);
                     var tempBottom = downPos*scale-1;
-                    if(tempBottom<0){tempBottom =0}
+                    if(tempBottom<0){tempBottom =0;}
                     $('#bottom').height(tempBottom);
                     $('#area').height((downPos*scale)-(upPos*scale));
                     $('#area').width((rightPos*scale)-(leftPos*scale));
@@ -240,8 +237,13 @@ function generate(imgSrc){
                         centerColorInv = tinycolor(tinycolor(centerColor).spin(180)).toHsl();
                         centerColorInv.s = 95;
                         var centerColorInvHex = tinycolor(centerColorInv).toHexString();
+                        var xgColor = this.canvas.getContext('2d').getImageData(xgFinal, height, 1, 1).data;
+                        var xgColor2 = tinycolor({r:xgColor[0], g:xgColor[1], b:xgColor[2]}).toRgb();
+                        console.log(xgColor2);
                         $('#xg').css('border-right-color',centerColorInvHex);
                         $('#yg').css('border-bottom-color',centerColorInvHex);
+                        $('#xg span').css('color',centerColorInvHex);
+                        $('#yg span').css('color',centerColorInvHex);
                         $('#left').css('border-right-color',centerColorInvHex);
                         $('#right').css('border-right-color',centerColorInvHex);
                         $('#top').css('border-bottom-color',centerColorInvHex);
@@ -255,7 +257,7 @@ function generate(imgSrc){
                         $('#area').css('background-color',areaBG);
                     }
                     done = true;
-
+                    $('#loading').fadeOut(200);
                     return false;
                 }
                 if(counter == 2000){
@@ -265,11 +267,8 @@ function generate(imgSrc){
                 if(counter>2000 && multiple(counter, 2000) ){
                     var etas = getEta(counter,startTime,a,step);
                     var tr = etas[1];
-                    //console.log('Time remaining '+ tr + 'ms');
-
                 }
             }
-            //console.timeEnd('test');
         }
     };
 }
@@ -281,6 +280,9 @@ function areaMomentOfInertia (){
 
 var showValTimeOut;
 function showVal(newVal){
+
+    showLoading();
+    
     clearTimeout(showValTimeOut);
     showValTimeOut = setTimeout(function(){
         generate();
@@ -317,7 +319,7 @@ $(document).ready(function(){
         storage.get('filter',function(result){
             filter = result.filter;
             console.log('filter',filter);
-            if(!filter){filter = 70;}
+            if(!filter){filter = 100;}
             $("#filter input[type=range]").val(filter);
             showVal(filter);
         });
@@ -326,7 +328,7 @@ $(document).ready(function(){
         if(localStorage){
             filter = localStorage.getItem("filter");
         }
-        if(!filter){filter = 70;}
+        if(!filter){filter = 100;}
         $("#filter input[type=range]").val(filter);
         showVal(filter);
     }
