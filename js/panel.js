@@ -51,7 +51,7 @@ function uploadImage(){
             reader.onloadend = function(){
                 //$("#uploadPreview").attr("src", this.result);
                 imgSrc = this.result;
-                console.log(imgSrc);
+                //console.log(imgSrc);
                 generate(imgSrc);
             };
 
@@ -60,10 +60,10 @@ function uploadImage(){
     });
 }
 
-var getEta = function (t,startTime,a,step){
+var getEta = function (t,startTime,a){
     var partialTime = new Date();
     var difTime =  partialTime - startTime;
-    var eta = (a/step/step)*(partialTime-startTime)/t;
+    var eta = a*(partialTime-startTime)/t;
     var timeRem = ~~(eta-difTime);
     return([eta,timeRem]);
 };
@@ -103,8 +103,8 @@ function generate(imgSrc){
             this.canvas.height = this.height;
             this.canvas.getContext('2d').drawImage(this, 0, 0, this.width, this.height);
         }
-        width = ~~(this.canvas.width)-1;
-        height = ~~(this.canvas.height)-1;
+        width = ~~(this.canvas.width);
+        height = ~~(this.canvas.height);
 
         var valueFilter;
         if(!filter){
@@ -113,20 +113,7 @@ function generate(imgSrc){
         else{
             valueFilter = 105 - filter;
         }
-        step = 1;
         var a = width*height;
-        if(a>95000){
-            step = 2;
-        }
-        if(a>1300000){
-            step = 3;
-        }
-        if(a>2600000){
-            step = 5;
-        }
-        if(a>5400000){
-            step = 8;
-        }
         var counter = 0;
         var downPos = 0;
         var upPos = height;
@@ -137,137 +124,145 @@ function generate(imgSrc){
         var valueT = 0;
         yg = 0;
         xg = 0;
-        var xx = 0;
-        var yy = 0;
         var counterPix = 0;
         var pix = 0;
         var totalArea = 0;
         var area = 0;
-        var limit = ~~((width+1)/step)*~~((height+1)/step);
+        var limit = ~~(width) * ~~(height);
         var startTime = new Date(), outputDiv = document.getElementById('outputTime');
         pixelData = null;
 
-        for (var x = 0; x <= width; x = x+step) {
-            for (var y = 0; y <= height; y= y+step) {
-                pixelData = this.canvas.getContext('2d').getImageData(x, y, 1, 1).data;
-                invValue = ~~((pixelData[0] * 299 + pixelData[1] * 587 + pixelData[2] * 114)/2550);
-                value = 100 - invValue;
-                var alpha = pixelData[3];
-                value = ~~(value* alpha / 255);
-                counter++;
-                imageData[counter] = value;
+        var canvasContext = this.canvas.getContext('2d');
 
-                if (value > valueFilter && alpha > 0) {
-                    counterPix++;
+        var imgDataArray = canvasContext.getImageData(0, 0, width, height).data;
 
-                    yg = yg + (y * value);
-                    xg = xg + (x * value);
-                    valueT = valueT + value;
+        for (var i = 0; i < imgDataArray.length; i = i+4) {
+            var x = 0;
+            var y = 0;
+            var alpha = imgDataArray[i+3];
+            if(i/4>width){
+                y = ~~(i/4/width);
+            }else{
+               y = 0; 
+            }
+            x = ~~((i/4)-y*width);
+            invValue = ~~((imgDataArray[i] * 299 + imgDataArray[i+1] * 587 + imgDataArray[i+2] * 114)/2550);
+            value = 100 - invValue;
+            value = ~~(value* alpha / 255);
+            counter++;
+            if (value > valueFilter && alpha > 0) {
+                counterPix++;
 
-                    if (downPos <= y && downPos<=height) {
-                        downPos = y;
-                    }
-                    if (upPos >= y) {
-                        upPos = y;
-                    }
-                    if (leftPos >= x) {
-                        leftPos = x;
-                    }
-                    if (rightPos <= x && rightPos<=width) {
-                        rightPos = x;
-                    }
+                yg = yg + (y * value);
+                xg = xg + (x * value);
+                valueT = valueT + value;
 
-                    totalArea = totalArea + (alpha/255);
+                if (downPos <= y && downPos<=height) {
+                    downPos = y;
                 }
-                if(counter >= limit){
-
-                    showAnalysisData();
-
-                    ygFinal =  ~~(yg / valueT);
-                    if(!ygFinal){ygFinal=~~(height/2);}
-                    xgFinal =  ~~(xg / valueT);
-                    if(!xgFinal){xgFinal=~~(width/2);}
-                    var tempFullArea = ((width+1)/step)*((height+1)/step);
-                    area = ~~(totalArea*10000/tempFullArea)/100;
-                    rightPos = rightPos+step;
-                    if((rightPos+(2*step))>=width){
-                        rightPos=width;
-                    }
-                    downPos = downPos + step;
-                    if((downPos+(2*step))>=height){
-                        downPos=height;
-                    }
-                    //$('#output').html('xg: '+ xgFinal+' yg: '+ygFinal+'<br><br>downPos: '+ downPos+'   upPos: '+upPos+'<br><br>leftPos: '+ leftPos+'   rightPos: '+rightPos+'<br><br>counter: '+ counter+'   counterPix: '+counterPix+'<br><br>Area:'+area+'%');
-
-                    $('#previewImg').attr("src",imgSrc);
-
-                    var scale = 1.0;
-                    var winW = $('.container').width();
-                    if(width > winW){
-                        scale = winW/width;
-                        $('#previewImg').width(~~(width*scale));
-                    }
-                    $('#xg').width(xgFinal*scale);
-                    if(xgFinal>36 && ygFinal>36){
-                        $('#xg').html('<div><span>xg</span></div>');
-                        $('#yg').html('<div><span>yg</span></div>');
-                    }
-                    $('#yg').height(ygFinal*scale);
-                    $('#cg').css('left',(xgFinal*scale)-10);
-                    $('#cg').css('top',(ygFinal*scale)-10);
-                    var tempLeft = leftPos*scale-1;
-                    if(tempLeft<0){tempLeft =0;}
-                    $('#left').width(tempLeft);
-                    $('#right').width(rightPos*scale);
-                    $('#top').height(upPos*scale-1);
-                    var tempBottom = downPos*scale-1;
-                    if(tempBottom<0){tempBottom =0;}
-                    $('#bottom').height(tempBottom);
-                    $('#area').height((downPos*scale)-(upPos*scale));
-                    $('#area').width((rightPos*scale)-(leftPos*scale));
-                    $('#area').css('top',upPos*scale);
-                    $('#area').css('left',leftPos*scale);
-                    //outputDiv.innerHTML = "ms since the start: " + (new Date() - startTime);
-                    
-                    var centerColor = this.canvas.getContext('2d').getImageData(xgFinal, ygFinal, 1, 1).data;
-                    centerColor = tinycolor({r:centerColor[0], g:centerColor[1], b:centerColor[2]}).toRgb();
-                    var gs = tinycolor(centerColor).greyscale().toRgb();
-                    ccRgb = tinycolor(centerColor).toRgb();
-                    if(Math.abs(ccRgb.r - gs.r) > 3 && Math.abs(ccRgb.g - gs.g) > 3 && Math.abs(ccRgb.b - gs.b) > 3){
-                        centerColorInv = tinycolor(tinycolor(centerColor).spin(180)).toHsl();
-                        centerColorInv.s = 95;
-                        var centerColorInvHex = tinycolor(centerColorInv).toHexString();
-                        var xgColor = this.canvas.getContext('2d').getImageData(xgFinal, height, 1, 1).data;
-                        var xgColor2 = tinycolor({r:xgColor[0], g:xgColor[1], b:xgColor[2]}).toRgb();
-                        console.log(xgColor2);
-                        $('#xg').css('border-right-color',centerColorInvHex);
-                        $('#yg').css('border-bottom-color',centerColorInvHex);
-                        $('#xg span').css('color',centerColorInvHex);
-                        $('#yg span').css('color',centerColorInvHex);
-                        $('#left').css('border-right-color',centerColorInvHex);
-                        $('#right').css('border-right-color',centerColorInvHex);
-                        $('#top').css('border-bottom-color',centerColorInvHex);
-                        $('#bottom').css('border-bottom-color',centerColorInvHex);
-                        var cgColor = tinycolor(centerColorInv).darken().toHexString();
-                        var cgBG = `"data:image/svg+xml;charset=UTF-8, %3Csvg fill='%23`+cgColor.substring(1)+`' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E' %3Cpath d='M12,2 C6.5,2 2,6.5 2,12 C2,17.5 6.5,22 12,22 C17.5,22 22,17.5 22,12 C22,6.5 17.5,2 12,2 Z M12,20 L12,12 L4,12 C4,7.6 7.6,4 12,4 L12,12 L20,12 C20,16.4 16.4,20 12,20 Z'/%3E' %3Cpath d='M0 0h24v24H0z' fill='none'/%3E'%3C/svg%3E"`;
-                        $('#cg').css("background-image","url("+cgBG+")");
-                        var areaBG = centerColorInv;
-                        areaBG.l = 95;
-                        areaBG = tinycolor(areaBG).toHexString();
-                        $('#area').css('background-color',areaBG);
-                    }
-                    done = true;
-                    $('#loading').fadeOut(200);
-                    return false;
+                if (upPos >= y) {
+                    upPos = y;
                 }
-                if(counter == 2000){
-                    var etas = getEta(2000,startTime,a,step);
-                    var tr = etas[1];
+                if (leftPos >= x) {
+                    leftPos = x;
                 }
-                if(counter>2000 && multiple(counter, 2000) ){
-                    var etas = getEta(counter,startTime,a,step);
-                    var tr = etas[1];
+                if (rightPos <= x && rightPos<=width) {
+                    rightPos = x;
                 }
+
+                totalArea = totalArea + (alpha/255);
+            }
+            
+            if(counter >= limit){
+                console.log('limit');
+                showAnalysisData();           
+
+                ygFinal =  ~~(yg / valueT);
+                if(!ygFinal){ygFinal=~~(height/2);}
+                xgFinal =  ~~(xg / valueT);
+                if(!xgFinal){xgFinal=~~(width/2);}
+                var tempFullArea = (width+1)*(height+1);
+                area = ~~(totalArea*10000/tempFullArea)/100;
+                rightPos = rightPos;
+                if((rightPos+2)>=width){
+                    rightPos=width;
+                }
+                downPos = downPos;
+                if((downPos+2)>=height){
+                    downPos=height;
+                }
+                //$('#output').html('xg: '+ xgFinal+' yg: '+ygFinal+'<br><br>downPos: '+ downPos+'   upPos: '+upPos+'<br><br>leftPos: '+ leftPos+'   rightPos: '+rightPos+'<br><br>counter: '+ counter+'   counterPix: '+counterPix+'<br><br>Area:'+area+'%');
+
+                $('#previewImg').attr("src",imgSrc);
+
+                var scale = 1.0;
+                var winW = $('.container').width();
+                if(width > winW){
+                    scale = winW/width;
+                    $('#previewImg').width(~~(width*scale));
+                } else{
+                    $('#previewImg').width(~~(width));
+                }
+                $('#xg').width(xgFinal*scale);
+                if(xgFinal>36 && ygFinal>36){
+                    $('#xg').html('<div><span>xg</span></div>');
+                    $('#yg').html('<div><span>yg</span></div>');
+                }
+                $('#yg').height(ygFinal*scale);
+                $('#cg').css('left',(xgFinal*scale)-10);
+                $('#cg').css('top',(ygFinal*scale)-10);
+                var tempLeft = leftPos*scale-1;
+                if(tempLeft<0){tempLeft =0;}
+                $('#left').width(tempLeft);
+                $('#right').width(rightPos*scale);
+                $('#top').height(upPos*scale-1);
+                var tempBottom = downPos*scale-1;
+                if(tempBottom<0){tempBottom =0;}
+                $('#bottom').height(tempBottom);
+                $('#area').height((downPos*scale)-(upPos*scale));
+                $('#area').width((rightPos*scale)-(leftPos*scale));
+                $('#area').css('top',upPos*scale);
+                $('#area').css('left',leftPos*scale);
+                //outputDiv.innerHTML = "ms since the start: " + (new Date() - startTime);
+                
+                var centerColorRGB = [];
+                centerColorRGB[0]= imgDataArray[xgFinal*ygFinal];
+                centerColorRGB[1]= imgDataArray[xgFinal*ygFinal+1];
+                centerColorRGB[2]= imgDataArray[xgFinal*ygFinal+2];
+                var centerColor = tinycolor({r:centerColorRGB[0], g:centerColorRGB[1], b:centerColorRGB[2]}).toRgb();
+                var gs = tinycolor(centerColor).greyscale().toRgb();
+                ccRgb = tinycolor(centerColor).toRgb();
+                if(Math.abs(ccRgb.r - gs.r) > 3 && Math.abs(ccRgb.g - gs.g) > 3 && Math.abs(ccRgb.b - gs.b) > 3){
+                    centerColorInv = tinycolor(tinycolor(centerColor).spin(180)).toHsl();
+                    centerColorInv.s = 95;
+                    var centerColorInvHex = tinycolor(centerColorInv).toHexString();
+                    $('#xg').css('border-right-color',centerColorInvHex);
+                    $('#yg').css('border-bottom-color',centerColorInvHex);
+                    $('#xg span').css('color',centerColorInvHex);
+                    $('#yg span').css('color',centerColorInvHex);
+                    $('#left').css('border-right-color',centerColorInvHex);
+                    $('#right').css('border-right-color',centerColorInvHex);
+                    $('#top').css('border-bottom-color',centerColorInvHex);
+                    $('#bottom').css('border-bottom-color',centerColorInvHex);
+                    var cgColor = tinycolor(centerColorInv).darken().toHexString();
+                    var cgBG = `"data:image/svg+xml;charset=UTF-8, %3Csvg fill='%23`+cgColor.substring(1)+`' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E' %3Cpath d='M12,2 C6.5,2 2,6.5 2,12 C2,17.5 6.5,22 12,22 C17.5,22 22,17.5 22,12 C22,6.5 17.5,2 12,2 Z M12,20 L12,12 L4,12 C4,7.6 7.6,4 12,4 L12,12 L20,12 C20,16.4 16.4,20 12,20 Z'/%3E' %3Cpath d='M0 0h24v24H0z' fill='none'/%3E'%3C/svg%3E"`;
+                    $('#cg').css("background-image","url("+cgBG+")");
+                    var areaBG = centerColorInv;
+                    areaBG.l = 95;
+                    areaBG = tinycolor(areaBG).toHexString();
+                    $('#area').css('background-color',areaBG);
+                }
+                done = true;
+                $('#loading').fadeOut(200);
+                return false;
+            }
+            if(counter == 2000){
+                var etas = getEta(2000,startTime,a);
+                var tr = etas[1];
+            }
+            if(counter>2000 && multiple(counter, 2000) ){
+                var etas = getEta(counter,startTime,a);
+                var tr = etas[1];
             }
         }
     };
@@ -280,9 +275,7 @@ function areaMomentOfInertia (){
 
 var showValTimeOut;
 function showVal(newVal){
-
     showLoading();
-    
     clearTimeout(showValTimeOut);
     showValTimeOut = setTimeout(function(){
         generate();
@@ -304,7 +297,6 @@ $(document).ready(function(){
             chromeApp = true;
         }
     }
-    var step;
     var pixelData;
     var width = 0;
     var height = 0;
@@ -318,7 +310,6 @@ $(document).ready(function(){
     if(chromeApp){
         storage.get('filter',function(result){
             filter = result.filter;
-            console.log('filter',filter);
             if(!filter){filter = 100;}
             $("#filter input[type=range]").val(filter);
             showVal(filter);
